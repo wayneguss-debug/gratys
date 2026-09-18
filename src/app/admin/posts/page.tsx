@@ -57,11 +57,19 @@ export default async function AdminPostsPage({
                 </td>
                 <td>
                   <div className="actions">
+                    <Link
+                      className="mini-button"
+                      href={`/admin/posts/${post.id}/edit`}
+                    >
+                      editar
+                    </Link>
+
                     {post.status === "published" ? (
                       <a
                         className="mini-button"
                         href={`/informativos/${post.slug}`}
                         target="_blank"
+                        rel="noreferrer"
                       >
                         abrir
                       </a>
