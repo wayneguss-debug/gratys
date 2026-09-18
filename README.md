@@ -1,81 +1,109 @@
 # Mural do Campus — nome provisório
 
-Primeira implementação do portal acadêmico desenvolvido pela **GRATYS TECH** para o contexto do IFMT Campus Cáceres.
+Portal acadêmico desenvolvido pela **GRATYS TECH** para o Projeto Integrador no contexto do IFMT Campus Cáceres.
 
-> **Importante:** GRATYS TECH é o nome da empresa/equipe, não do site. **Mural do Campus** é apenas um placeholder até a definição do nome oficial.
+> **GRATYS TECH é o nome da empresa/equipe.** O nome do site ainda não foi definido; “Mural do Campus” é apenas um placeholder administrável pelo painel.
 
 ## Objetivo
 
-Centralizar informações úteis para alunos e servidores, seguindo o documento do Projeto Integrador:
+Centralizar informações úteis para alunos e servidores:
 
-- informativos semanais e novidades do campus;
-- calendário de eventos e prazos;
-- orientações sobre regras e funcionamento institucional;
-- avisos sobre alterações relevantes;
-- apoio à localização de salas e setores;
-- espaço preparado para horários de transporte;
-- comunicação simples, acessível e confiável.
+- informativos semanais e novidades;
+- eventos, prazos e processos seletivos;
+- orientações institucionais em linguagem direta;
+- alterações de horário e avisos importantes;
+- localização de salas, setores e serviços;
+- horários de transporte confirmados;
+- comunicação organizada, acessível e verificável.
 
 O portal é um **projeto acadêmico independente** e não deve ser confundido com um canal oficial do IFMT.
 
-## Stack atual
+## Stack v2
 
-- HTML5, CSS3 e JavaScript;
-- Supabase (PostgreSQL + REST API + RLS);
-- configuração pronta para hospedagem estática na Vercel.
+- Next.js 16.3.5 (App Router)
+- React 19.3.0
+- TypeScript
+- Supabase Auth + PostgreSQL + Storage + RLS
+- Server Components e Server Actions
+- Vercel como alvo de deploy
 
-A primeira versão foi mantida leve para priorizar desempenho, responsividade e facilidade de evolução.
+As dependências são versionadas de forma fixa. O CI gera/valida o lockfile e executa typecheck + build.
+
+## Páginas públicas
+
+- / — mural editorial dinâmico
+- /informativos — arquivo com busca
+- /informativos/[slug] — página individual
+- /agenda — eventos e prazos
+- /campus — salas, setores e transporte
+- /sitemap.xml e /robots.txt
+
+## Autenticação
+
+- /auth/login — login e cadastro
+- /auth/check-email — instrução de verificação
+- /auth/confirm — confirmação SSR por token hash/código
+- /auth/recovery — recuperação de senha
+- /auth/update-password — atualização segura da senha
+
+Papéis:
+
+- viewer — conta comum, sem painel editorial
+- editor — gerencia conteúdo, agenda, campus e mídia
+- admin — editor + configurações do portal
+
+A conta wayneguss65@gmail.com é promovida a admin somente após a confirmação do e-mail.
+
+## Painel editorial
+
+- /admin — visão geral
+- /admin/posts — publicar, despublicar, editar e excluir informativos
+- /admin/posts/new — compositor
+- /admin/events — agenda
+- /admin/campus — locais e transporte
+- /admin/media — upload de imagens para Supabase Storage
+- /admin/settings — nome, tagline, descrição e links do portal
+
+O painel é protegido no servidor e as permissões também são aplicadas pelo PostgreSQL/RLS. O frontend não é a barreira de segurança.
 
 ## Banco de dados
 
-Projeto Supabase: `jbwrnvmidjvcnkexjsqj`
+Projeto Supabase: jbwrnvmidjvcnkexjsqj
 
-Tabelas iniciais:
+Tabelas:
 
-- `posts`
-- `events`
-- `campus_locations`
-- `transport_schedules`
+- profiles
+- site_settings
+- posts
+- events
+- campus_locations
+- transport_schedules
 
-Todas estão com **Row Level Security (RLS)** ativado. Visitantes só conseguem consultar conteúdo publicado/ativo.
+Bucket:
 
-## Estrutura atual
+- media — público para leitura e restrito a editores/admins para escrita
 
-```
-/
-├── index.html
-├── styles.css
-├── app.js
-├── vercel.json
-└── supabase/
-    └── schema.sql
-```
+O Security Advisor está sem alertas. Todas as tabelas expostas usam RLS.
 
-## Estado da primeira versão
+## E-mails
 
-Já implementado:
+Templates versionados:
 
-- página inicial responsiva;
-- seção de informativos conectada ao Supabase;
-- busca de notícias/avisos;
-- agenda de eventos e prazos;
-- orientações;
-- guia de salas e setores;
-- área de transporte;
-- identidade provisória;
-- aviso explícito de que não é canal oficial do IFMT;
-- estados vazios para impedir exibição de informações inventadas;
-- RLS e políticas de leitura/escrita administrativa.
+- supabase/templates/confirmation.html
+- supabase/templates/recovery.html
+- supabase/templates/invite.html
 
-## Próximas etapas
+Como este é um projeto Supabase Free criado depois de 3 de junho de 2026, os templates personalizados só poderão ser ativados com **SMTP próprio**. Até lá, os arquivos servem como fonte versionada da identidade de e-mail.
 
-1. cadastrar informações reais de eventos, salas, setores e transporte;
-2. criar painel administrativo autenticado;
-3. criar fluxo de publicação e revisão;
-4. definir nome e identidade visual oficiais;
-5. integrar Instagram quando a conta do projeto estiver definida;
-6. criar páginas individuais para notícias e orientações;
-7. configurar domínio e deploy de produção.
+## Variáveis de ambiente
+
+Crie .env.local com base em .env.example e preencha:
+
+NEXT_PUBLIC_SUPABASE_URL=https://jbwrnvmidjvcnkexjsqj.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+Nunca use service_role ou chave secreta em variável NEXT_PUBLIC_*.
 
 ## Equipe — GRATYS TECH
 
