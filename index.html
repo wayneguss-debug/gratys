@@ -3,125 +3,203 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Campus Agora — portal acadêmico experimental para reunir avisos, eventos, orientações e informações úteis do IFMT Campus Cáceres.">
-  <meta name="theme-color" content="#0f5132">
-  <title>Campus Agora</title>
+  <meta name="description" content="Mural do Campus — portal acadêmico experimental para reunir avisos, agenda, orientações e informações úteis do IFMT Campus Cáceres.">
+  <meta name="theme-color" content="#f4efe5">
+  <title>Mural do Campus</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
+  <div class="top-strip">
+    <div class="container strip-inner">
+      <span>Projeto Integrador • GRATYS TECH</span>
+      <span>IFMT Campus Cáceres</span>
+      <span>Nome provisório</span>
+    </div>
+  </div>
+
   <header class="site-header">
     <div class="container nav-wrap">
-      <a class="brand" href="#inicio" aria-label="Campus Agora — início">
-        <span class="brand-mark" aria-hidden="true">CA</span>
-        <span><strong>Campus Agora</strong><small>nome provisório</small></span>
+      <a class="brand" href="#inicio" aria-label="Mural do Campus — início">
+        <span class="brand-mark" aria-hidden="true">MC</span>
+        <span class="brand-copy">
+          <strong>Mural do Campus</strong>
+          <small>informação que circula</small>
+        </span>
       </a>
-      <button class="menu-button" id="menuButton" aria-expanded="false" aria-controls="mainNav">Menu</button>
+
+      <button class="menu-button" id="menuButton" aria-expanded="false" aria-controls="mainNav">menu</button>
+
       <nav id="mainNav" class="main-nav" aria-label="Navegação principal">
-        <a href="#informativos">Informativos</a>
-        <a href="#agenda">Agenda</a>
-        <a href="#orientacoes">Orientações</a>
-        <a href="#campus">Campus</a>
-        <a href="#sobre">Sobre</a>
+        <a href="#informativos">01 / Informativos</a>
+        <a href="#agenda">02 / Agenda</a>
+        <a href="#orientacoes">03 / Guia</a>
+        <a href="#campus">04 / Campus</a>
+        <a href="#sobre">05 / Projeto</a>
       </nav>
     </div>
   </header>
 
   <main id="conteudo">
     <section class="hero" id="inicio">
-      <div class="container hero-grid">
-        <div>
-          <span class="eyebrow">Projeto acadêmico • IFMT Campus Cáceres</span>
-          <h1>Informação do campus, <span>sem complicação.</span></h1>
-          <p class="hero-copy">Um espaço para reunir avisos, eventos, prazos, orientações e informações úteis do cotidiano acadêmico em um só lugar.</p>
+      <div class="container hero-layout">
+        <div class="hero-main">
+          <div class="issue-line">
+            <span>EDIÇÃO 001</span>
+            <span>2026</span>
+          </div>
+          <h1>O campus<br>acontece <em>aqui.</em></h1>
+          <p class="hero-copy">Avisos, prazos, eventos, orientações e informações úteis reunidas em um só lugar, com linguagem direta e foco no que realmente importa no dia a dia acadêmico.</p>
+
           <div class="hero-actions">
-            <a class="button primary" href="#informativos">Ver informativos</a>
-            <a class="button ghost" href="#agenda">Consultar agenda</a>
+            <a class="button solid" href="#informativos">Abrir mural</a>
+            <a class="button text" href="#agenda">Ver próximos prazos →</a>
           </div>
-          <p class="disclaimer">Este é um projeto acadêmico independente e não representa um canal oficial do IFMT.</p>
+
+          <p class="disclaimer">Projeto acadêmico independente. Para decisões importantes, confirme também nos canais oficiais do IFMT.</p>
         </div>
-        <aside class="hero-panel" aria-label="Atalhos rápidos">
-          <div class="panel-head"><span>Atalhos rápidos</span><span class="live-dot">online</span></div>
-          <div class="quick-grid">
-            <a href="#agenda"><span class="quick-icon">01</span><strong>Eventos e prazos</strong><small>Veja o que vem por aí</small></a>
-            <a href="#orientacoes"><span class="quick-icon">02</span><strong>Como funciona</strong><small>Regras e orientações</small></a>
-            <a href="#campus"><span class="quick-icon">03</span><strong>Salas e setores</strong><small>Encontre onde ir</small></a>
-            <a href="#transporte"><span class="quick-icon">04</span><strong>Transporte</strong><small>Horários e avisos</small></a>
+
+        <aside class="hero-board" aria-label="Resumo do portal">
+          <div class="board-pin"></div>
+          <p class="board-kicker">NO MURAL</p>
+          <div class="board-stat">
+            <strong>01</strong>
+            <span>Informativos e novidades</span>
           </div>
+          <div class="board-stat">
+            <strong>02</strong>
+            <span>Eventos e processos seletivos</span>
+          </div>
+          <div class="board-stat">
+            <strong>03</strong>
+            <span>Regras, salas e transporte</span>
+          </div>
+          <div class="board-note">Atualização semanal pela equipe</div>
         </aside>
       </div>
     </section>
 
-    <section class="section" id="informativos">
+    <section class="section section-editorial" id="informativos">
       <div class="container">
-        <div class="section-heading">
-          <div><span class="kicker">Atualizações</span><h2>Informativos do campus</h2></div>
-          <label class="search"><span>Buscar</span><input id="postSearch" type="search" placeholder="Digite uma palavra..." autocomplete="off"></label>
+        <div class="section-masthead">
+          <span class="section-number">01</span>
+          <div>
+            <p class="eyebrow">O QUE VOCÊ PRECISA SABER</p>
+            <h2>Informativos</h2>
+          </div>
+          <label class="search">
+            <span>buscar</span>
+            <input id="postSearch" type="search" placeholder="palavra-chave..." autocomplete="off">
+          </label>
         </div>
+
         <div id="postsGrid" class="cards-grid" aria-live="polite">
-          <article class="skeleton-card"></article><article class="skeleton-card"></article><article class="skeleton-card"></article>
+          <article class="skeleton-card"></article>
+          <article class="skeleton-card"></article>
+          <article class="skeleton-card"></article>
         </div>
       </div>
     </section>
 
-    <section class="section muted" id="agenda">
+    <section class="section agenda-section" id="agenda">
       <div class="container">
-        <div class="section-heading">
-          <div><span class="kicker">Calendário</span><h2>Próximos eventos e prazos</h2></div>
-          <span class="status-chip">Atualização semanal</span>
+        <div class="agenda-heading">
+          <div>
+            <p class="eyebrow light">MARQUE NA AGENDA</p>
+            <h2>Próximos eventos<br>e prazos.</h2>
+          </div>
+          <p class="agenda-copy">A ideia é transformar datas importantes em algo impossível de perder no meio de grupos, mensagens e avisos dispersos.</p>
         </div>
-        <div id="eventsList" class="timeline" aria-live="polite"><div class="empty-state">Carregando agenda...</div></div>
+
+        <div id="eventsList" class="timeline" aria-live="polite">
+          <div class="empty-state dark">Carregando agenda...</div>
+        </div>
       </div>
     </section>
 
-    <section class="section" id="orientacoes">
+    <section class="section guide-section" id="orientacoes">
       <div class="container">
-        <div class="section-heading"><div><span class="kicker">Ajuda rápida</span><h2>Orientações e funcionamento</h2></div></div>
-        <div class="feature-grid">
-          <article class="feature-card"><span>01</span><h3>Regras básicas</h3><p>Um espaço organizado para reunir orientações institucionais que ajudam no dia a dia acadêmico.</p></article>
-          <article class="feature-card"><span>02</span><h3>Processos e prazos</h3><p>Informações claras sobre datas importantes, processos seletivos e atividades que exigem atenção.</p></article>
-          <article class="feature-card"><span>03</span><h3>Avisos antecipados</h3><p>Centralização de comunicados sobre palestras, mudanças de horário e outras alterações relevantes.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section muted" id="campus">
-      <div class="container campus-layout">
-        <div>
-          <span class="kicker">Localização interna</span>
-          <h2>Encontre salas e setores</h2>
-          <p class="section-copy">O guia do campus foi preparado para reduzir a dificuldade de localizar salas de aula e setores administrativos.</p>
-          <div class="filter-row" role="group" aria-label="Filtros de local">
-            <button class="filter active" data-location-filter="all">Todos</button>
-            <button class="filter" data-location-filter="room">Salas</button>
-            <button class="filter" data-location-filter="sector">Setores</button>
-            <button class="filter" data-location-filter="service">Serviços</button>
+        <div class="section-masthead compact">
+          <span class="section-number">03</span>
+          <div>
+            <p class="eyebrow">GUIA RÁPIDO</p>
+            <h2>Entenda sem burocracia.</h2>
           </div>
         </div>
-        <div id="locationsList" class="location-list" aria-live="polite"><div class="empty-state">Carregando locais...</div></div>
-      </div>
-    </section>
 
-    <section class="section" id="transporte">
-      <div class="container">
-        <div class="section-heading"><div><span class="kicker">Mobilidade</span><h2>Horários de transporte</h2></div></div>
-        <div id="transportList" class="transport-list" aria-live="polite"><div class="empty-state">Carregando horários...</div></div>
-      </div>
-    </section>
-
-    <section class="section about-section" id="sobre">
-      <div class="container about-grid">
-        <div>
-          <span class="kicker light">Sobre o projeto</span>
-          <h2>Comunicação útil, simples e confiável.</h2>
-          <p>O portal nasce de um Projeto Integrador da GRATYS TECH para facilitar o acesso de alunos e servidores a informações do campus, aproximando comunicação institucional e comunidade acadêmica.</p>
+        <div class="guide-list">
+          <article class="guide-row">
+            <span class="guide-index">A</span>
+            <div><h3>Regras básicas</h3><p>Orientações institucionais reunidas em linguagem mais simples para consulta rápida.</p></div>
+            <span class="guide-arrow">↗</span>
+          </article>
+          <article class="guide-row">
+            <span class="guide-index">B</span>
+            <div><h3>Processos e prazos</h3><p>Datas importantes, processos seletivos e atividades que precisam de atenção.</p></div>
+            <span class="guide-arrow">↗</span>
+          </article>
+          <article class="guide-row">
+            <span class="guide-index">C</span>
+            <div><h3>Mudanças e avisos</h3><p>Palestras, alterações de horário, saídas antecipadas e comunicados relevantes.</p></div>
+            <span class="guide-arrow">↗</span>
+          </article>
         </div>
-        <div class="values-grid">
-          <span>Inclusão</span><span>Veracidade</span><span>Integridade</span><span>Responsabilidade</span><span>Respeito</span><span>Confiança</span>
+      </div>
+    </section>
+
+    <section class="section campus-section" id="campus">
+      <div class="container campus-layout">
+        <div class="campus-intro">
+          <span class="section-number">04</span>
+          <p class="eyebrow">MAPA MENTAL DO CAMPUS</p>
+          <h2>Onde fica?</h2>
+          <p>Um guia simples para parar de depender de “vira depois do bloco tal e pergunta lá”.</p>
+
+          <div class="filter-row" role="group" aria-label="Filtros de local">
+            <button class="filter active" data-location-filter="all">todos</button>
+            <button class="filter" data-location-filter="room">salas</button>
+            <button class="filter" data-location-filter="sector">setores</button>
+            <button class="filter" data-location-filter="service">serviços</button>
+          </div>
+        </div>
+
+        <div id="locationsList" class="location-list" aria-live="polite">
+          <div class="empty-state">Carregando locais...</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section transport-section" id="transporte">
+      <div class="container">
+        <div class="section-masthead compact">
+          <span class="section-number">05</span>
+          <div>
+            <p class="eyebrow">MOBILIDADE</p>
+            <h2>Transporte sem adivinhação.</h2>
+          </div>
+        </div>
+
+        <div id="transportList" class="transport-list" aria-live="polite">
+          <div class="empty-state">Carregando horários...</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="manifesto" id="sobre">
+      <div class="container manifesto-grid">
+        <div class="manifesto-mark">“</div>
+        <div>
+          <p class="eyebrow light">SOBRE O PROJETO</p>
+          <h2>Informação útil não deveria parecer um labirinto.</h2>
+          <p class="manifesto-copy">A proposta da GRATYS TECH é aproximar a comunicação do cotidiano real de alunos e servidores: menos ruído, menos procura, mais contexto.</p>
+        </div>
+        <div class="values-cloud" aria-label="Valores da equipe">
+          <span>Inclusão</span><span>Veracidade</span><span>Integridade</span>
+          <span>Responsabilidade</span><span>Respeito</span><span>Confiança</span>
         </div>
       </div>
     </section>
@@ -129,8 +207,18 @@
 
   <footer class="footer">
     <div class="container footer-grid">
-      <div><strong>Campus Agora</strong><p>Nome provisório • Projeto Integrador GRATYS TECH</p></div>
-      <div><p>Desenvolvido para o contexto do IFMT Campus Cáceres.</p><p class="footer-note">Projeto acadêmico independente. Confirme informações críticas nos canais oficiais do IFMT.</p></div>
+      <div>
+        <strong>Mural do Campus</strong>
+        <p>nome provisório</p>
+      </div>
+      <div>
+        <strong>GRATYS TECH</strong>
+        <p>Projeto Integrador • 2026</p>
+      </div>
+      <div>
+        <p>Contexto: IFMT Campus Cáceres</p>
+        <p>Não é um canal oficial do IFMT.</p>
+      </div>
     </div>
   </footer>
 
