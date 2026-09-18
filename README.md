@@ -1,8 +1,8 @@
-# Campus Agora — nome provisório
+# Mural do Campus — nome provisório
 
 Primeira implementação do portal acadêmico desenvolvido pela **GRATYS TECH** para o contexto do IFMT Campus Cáceres.
 
-> **Importante:** GRATYS TECH é o nome da empresa/equipe, não do site. **Campus Agora** é apenas um placeholder até a definição do nome oficial.
+> **Importante:** GRATYS TECH é o nome da empresa/equipe, não do site. **Mural do Campus** é apenas um placeholder até a definição do nome oficial.
 
 ## Objetivo
 
