@@ -25,6 +25,7 @@ export default async function AdminLayout({
             <Link href="/admin/posts">Informativos</Link>
             <Link href="/admin/events">Agenda</Link>
             <Link href="/admin/campus">Campus e transporte</Link>
+            <Link href="/admin/media">Biblioteca de mídia</Link>
             {profile.role === "admin" ? (
               <Link href="/admin/settings">Configurações</Link>
             ) : null}
