@@ -52,7 +52,7 @@ export default async function InformativoPage({
         <h1>{post.title}</h1>
         <p className="article-lead">{post.excerpt}</p>
 
-        {post.cover_url ? (
+        {post.cover_url?.startsWith("https://jbwrnvmidjvcnkexjsqj.supabase.co/storage/v1/object/public/media/") ? (
           <Image
             src={post.cover_url}
             alt=""
