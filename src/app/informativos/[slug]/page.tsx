@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPostBySlug } from "@/lib/data";
@@ -52,7 +53,14 @@ export default async function InformativoPage({
         <p className="article-lead">{post.excerpt}</p>
 
         {post.cover_url ? (
-          <img src={post.cover_url} alt="" />
+          <Image
+            src={post.cover_url}
+            alt=""
+            width={1600}
+            height={900}
+            sizes="(max-width: 860px) 100vw, 820px"
+            style={{ width: "100%", height: "auto", marginTop: 34 }}
+          />
         ) : null}
 
         <div className="article-body">{post.content}</div>
