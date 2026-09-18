@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { signIn, signUp } from "@/app/auth/actions";
 
 export default async function LoginPage({
@@ -34,6 +35,9 @@ export default async function LoginPage({
             <button className="button solid" type="submit">
               entrar
             </button>
+            <Link className="button text" href="/auth/recovery">
+              esqueci minha senha →
+            </Link>
           </form>
 
           <form className="form-stack" action={signUp}>
