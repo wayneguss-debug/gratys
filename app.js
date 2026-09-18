@@ -94,7 +94,7 @@ async function loadContent(){
   }catch(error){
     console.error(error);
     state.posts=[{
-      title:"Bem-vindo ao Campus Agora",
+      title:"Bem-vindo ao Mural do Campus",
       excerpt:"Um espaço acadêmico para reunir avisos, orientações, eventos e informações úteis do campus.",
       type:"notice",featured:true,published_at:new Date().toISOString()
     }];
