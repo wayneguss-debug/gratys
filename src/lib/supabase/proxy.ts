@@ -1,33 +1,33 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { getSupabaseConfig } from "@/lib/supabase/config";
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
+  const { url, publishableKey } = getSupabaseConfig();
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet, headersToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+  const supabase = createServerClient(url, publishableKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet, headersToSet) {
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value)
+        );
 
-          response = NextResponse.next({ request });
+        response = NextResponse.next({ request });
 
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set(name, value, options)
+        );
 
-          Object.entries(headersToSet ?? {}).forEach(([key, value]) => {
-            response.headers.set(key, value);
-          });
-        }
+        Object.entries(headersToSet ?? {}).forEach(([key, value]) => {
+          response.headers.set(key, value);
+        });
       }
     }
-  );
+  });
 
   await supabase.auth.getClaims();
   return response;

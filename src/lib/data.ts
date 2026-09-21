@@ -1,10 +1,11 @@
 import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { getSupabaseConfig } from "@/lib/supabase/config";
 
-const publicClient = createSupabaseClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-  { auth: { persistSession: false, autoRefreshToken: false } }
-);
+const { url, publishableKey } = getSupabaseConfig();
+
+const publicClient = createSupabaseClient(url, publishableKey, {
+  auth: { persistSession: false, autoRefreshToken: false }
+});
 
 export type SiteSettings = {
   site_name: string;
@@ -139,7 +140,13 @@ export async function getLocations(): Promise<CampusLocation[]> {
 }
 
 export async function getTransportSchedules(): Promise<TransportSchedule[]> {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Cuiaba",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(new Date());
+
   const { data } = await publicClient
     .from("transport_schedules")
     .select("*")

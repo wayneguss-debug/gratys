@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo_Black, DM_Mono, Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import "./polish.css";
 import { getSiteSettings } from "@/lib/data";
 
 const display = Archivo_Black({
@@ -21,6 +22,26 @@ const body = Inter({
   variable: "--font-body"
 });
 
+function getSiteUrl() {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (configured) return configured;
+
+  const vercelHost =
+    process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim() ||
+    process.env.VERCEL_URL?.trim();
+
+  return vercelHost
+    ? `https://${vercelHost.replace(/^https?:\/\//, "")}`
+    : "http://localhost:3000";
+}
+
+const navItems = [
+  ["/informativos", "01 / Informativos"],
+  ["/agenda", "02 / Agenda"],
+  ["/campus", "03 / Campus"],
+  ["/#sobre", "04 / Projeto"]
+] as const;
+
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
 
@@ -30,9 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: `%s • ${settings.site_name}`
     },
     description: settings.description,
-    metadataBase: new URL(
-      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"
-    ),
+    metadataBase: new URL(getSiteUrl()),
     openGraph: {
       type: "website",
       locale: "pt_BR",
@@ -58,14 +77,19 @@ export default async function RootLayout({
           <div className="container strip-inner">
             <span>Projeto Integrador • GRATYS TECH</span>
             <span>IFMT Campus Cáceres</span>
-            {settings.is_name_placeholder ? <span>Nome provisório</span> : <span>Portal acadêmico</span>}
+            <span className="strip-status">
+              <i aria-hidden="true" />
+              {settings.is_name_placeholder ? "Identidade em construção" : "Portal acadêmico"}
+            </span>
           </div>
         </div>
 
         <header className="site-header">
           <div className="container nav-wrap">
-            <Link className="brand" href="/">
-              <span className="brand-mark" aria-hidden="true">MC</span>
+            <Link className="brand" href="/" aria-label={`${settings.site_name} — início`}>
+              <span className="brand-mark portal-mark" aria-hidden="true">
+                <span className="portal-mark-dot" />
+              </span>
               <span className="brand-copy">
                 <strong>{settings.site_name}</strong>
                 <small>{settings.tagline}</small>
@@ -73,11 +97,24 @@ export default async function RootLayout({
             </Link>
 
             <nav className="main-nav" aria-label="Navegação principal">
-              <Link href="/informativos">01 / Informativos</Link>
-              <Link href="/agenda">02 / Agenda</Link>
-              <Link href="/campus">03 / Campus</Link>
-              <Link href="/#sobre">04 / Projeto</Link>
+              {navItems.map(([href, label]) => (
+                <Link href={href} key={href}>
+                  {label}
+                </Link>
+              ))}
             </nav>
+
+            <details className="mobile-menu">
+              <summary aria-label="Abrir navegação">Menu</summary>
+              <nav aria-label="Navegação móvel">
+                {navItems.map(([href, label]) => (
+                  <Link href={href} key={href}>
+                    {label}
+                  </Link>
+                ))}
+                <Link href="/auth/login">Área da equipe</Link>
+              </nav>
+            </details>
           </div>
         </header>
 
