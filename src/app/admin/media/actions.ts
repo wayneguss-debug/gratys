@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireEditor } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -53,5 +54,25 @@ export async function uploadMedia(formData: FormData) {
   }
 
   const { data } = supabase.storage.from("media").getPublicUrl(path);
+  revalidatePath("/admin/media");
   redirect(`/admin/media?url=${encodeURIComponent(data.publicUrl)}`);
+}
+
+export async function deleteMedia(formData: FormData) {
+  const profile = await requireEditor();
+  const path = String(formData.get("path") ?? "");
+
+  if (!path.startsWith(`${profile.id}/`) || path.includes("..")) {
+    redirect("/admin/media?error=Arquivo inválido.");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.storage.from("media").remove([path]);
+
+  if (error) {
+    redirect(`/admin/media?error=${encodeURIComponent(error.message)}`);
+  }
+
+  revalidatePath("/admin/media");
+  redirect("/admin/media?message=Imagem removida.");
 }

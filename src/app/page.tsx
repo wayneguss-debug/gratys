@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Icon, type IconName } from "@/components/icon";
 import {
   getLocations,
   getPublishedPosts,
@@ -13,26 +14,73 @@ function formatDate(date: string) {
   return new Intl.DateTimeFormat("pt-BR", {
     day: "2-digit",
     month: "short",
-    year: "numeric"
+    year: "numeric",
+    timeZone: "America/Cuiaba"
   }).format(new Date(date));
 }
 
 function formatEventDate(date: string) {
   const d = new Date(date);
   return {
-    day: String(d.getDate()).padStart(2, "0"),
-    month: d.toLocaleDateString("pt-BR", { month: "short" })
+    day: new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      timeZone: "America/Cuiaba"
+    }).format(d),
+    month: new Intl.DateTimeFormat("pt-BR", {
+      month: "short",
+      timeZone: "America/Cuiaba"
+    }).format(d)
   };
 }
 
 export default async function HomePage() {
-  const [settings, posts, events, locations, transport] = await Promise.all([
+  const [settings, allPosts, allEvents, locations, transport] = await Promise.all([
     getSiteSettings(),
-    getPublishedPosts(7),
-    getUpcomingEvents(5),
+    getPublishedPosts(),
+    getUpcomingEvents(),
     getLocations(),
     getTransportSchedules()
   ]);
+
+  const posts = allPosts.slice(0, 7);
+  const events = allEvents.slice(0, 5);
+
+  const quickLinks: {
+    href: string;
+    icon: IconName;
+    eyebrow: string;
+    title: string;
+    detail: string;
+  }[] = [
+    {
+      href: "/informativos",
+      icon: "news",
+      eyebrow: "MURAL",
+      title: "Informativos",
+      detail: allPosts.length === 1 ? "1 publicação disponível" : `${allPosts.length} publicações disponíveis`
+    },
+    {
+      href: "/agenda",
+      icon: "calendar",
+      eyebrow: "DATAS",
+      title: "Agenda",
+      detail: allEvents.length === 1 ? "1 item futuro" : `${allEvents.length} itens futuros`
+    },
+    {
+      href: "/campus",
+      icon: "map",
+      eyebrow: "GUIA",
+      title: "Campus",
+      detail: locations.length === 1 ? "1 local confirmado" : `${locations.length} locais confirmados`
+    },
+    {
+      href: "/campus#transporte",
+      icon: "bus",
+      eyebrow: "MOBILIDADE",
+      title: "Transporte",
+      detail: transport.length === 1 ? "1 horário ativo" : `${transport.length} horários ativos`
+    }
+  ];
 
   return (
     <main id="conteudo">
@@ -41,7 +89,7 @@ export default async function HomePage() {
           <div>
             <div className="issue-line">
               <span>EDIÇÃO DIGITAL</span>
-              <span>2026</span>
+              <span>IFMT • 2026</span>
             </div>
             <h1>
               O campus
@@ -51,7 +99,7 @@ export default async function HomePage() {
             <p className="hero-copy">{settings.description}</p>
             <div className="hero-actions">
               <Link className="button solid" href="/informativos">
-                Abrir mural
+                Abrir mural <Icon name="arrow" size={16} />
               </Link>
               <Link className="button text" href="/agenda">
                 Ver próximos prazos →
@@ -63,20 +111,20 @@ export default async function HomePage() {
             </p>
           </div>
 
-          <aside className="hero-board" aria-label="O que você encontra aqui">
+          <aside className="hero-board" aria-label="Resumo do portal">
             <div className="board-pin" />
-            <p className="board-kicker">NO MURAL</p>
+            <p className="board-kicker">PAINEL DO CAMPUS</p>
             <div className="board-stat">
-              <strong>01</strong>
-              <span>Informativos e novidades</span>
+              <strong>{String(allPosts.length).padStart(2, "0")}</strong>
+              <span>informativos publicados</span>
             </div>
             <div className="board-stat">
-              <strong>02</strong>
-              <span>Eventos e processos seletivos</span>
+              <strong>{String(allEvents.length).padStart(2, "0")}</strong>
+              <span>datas futuras na agenda</span>
             </div>
             <div className="board-stat">
-              <strong>03</strong>
-              <span>Regras, salas e transporte</span>
+              <strong>{String(locations.length).padStart(2, "0")}</strong>
+              <span>locais no guia</span>
             </div>
             <div className="board-note">
               {settings.is_name_placeholder
@@ -84,6 +132,22 @@ export default async function HomePage() {
                 : "Atualização contínua pela equipe"}
             </div>
           </aside>
+        </div>
+      </section>
+
+      <section className="portal-shortcuts" aria-label="Acessos rápidos">
+        <div className="container shortcut-grid">
+          {quickLinks.map((item) => (
+            <Link className="shortcut-card" href={item.href} key={item.href}>
+              <span className="shortcut-icon"><Icon name={item.icon} size={21} /></span>
+              <span className="shortcut-copy">
+                <small>{item.eyebrow}</small>
+                <strong>{item.title}</strong>
+                <span>{item.detail}</span>
+              </span>
+              <Icon name="arrow" size={17} />
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -114,7 +178,7 @@ export default async function HomePage() {
                   <h3>{post.title}</h3>
                   <p>{post.excerpt}</p>
                   <Link className="read-more" href={`/informativos/${post.slug}`}>
-                    ler informativo →
+                    ler informativo <Icon name="arrow" size={14} />
                   </Link>
                 </article>
               ))}
@@ -210,7 +274,7 @@ export default async function HomePage() {
             </p>
             <div className="hero-actions">
               <Link className="button solid" href="/campus">
-                abrir guia do campus
+                abrir guia do campus <Icon name="arrow" size={16} />
               </Link>
             </div>
           </div>
@@ -238,7 +302,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section white">
+      <section className="section white" id="transporte">
         <div className="container">
           <div className="section-head">
             <span className="section-number">05</span>

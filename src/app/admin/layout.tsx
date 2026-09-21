@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireEditor } from "@/lib/auth";
 import { signOut } from "@/app/auth/actions";
+import { AdminNav } from "@/app/admin/admin-nav";
+import { Icon } from "@/components/icon";
 
 export const dynamic = "force-dynamic";
 
@@ -15,28 +17,40 @@ export default async function AdminLayout({
     <main id="conteudo" className="admin-shell">
       <div className="container admin-layout">
         <aside className="admin-sidebar">
-          <strong>Painel editorial</strong>
-          <small>
-            {profile.display_name || "Equipe"} • {profile.role}
-          </small>
+          <Link className="admin-brand" href="/admin">
+            <span className="admin-brand-mark" aria-hidden="true">
+              <span />
+            </span>
+            <span>
+              <strong>Painel editorial</strong>
+              <small>workspace GRATYS</small>
+            </span>
+          </Link>
 
-          <nav className="admin-nav">
-            <Link href="/admin">Visão geral</Link>
-            <Link href="/admin/posts">Informativos</Link>
-            <Link href="/admin/events">Agenda</Link>
-            <Link href="/admin/campus">Campus e transporte</Link>
-            <Link href="/admin/media">Biblioteca de mídia</Link>
-            {profile.role === "admin" ? (
-              <Link href="/admin/settings">Configurações</Link>
-            ) : null}
-            <Link href="/">Ver portal</Link>
-          </nav>
+          <div className="admin-profile">
+            <span className="profile-avatar">
+              {(profile.display_name || "E").slice(0, 1).toUpperCase()}
+            </span>
+            <span>
+              <strong>{profile.display_name || "Equipe"}</strong>
+              <small>{profile.role}</small>
+            </span>
+          </div>
 
-          <form action={signOut} style={{ marginTop: 24 }}>
-            <button className="mini-button" type="submit">
-              sair
-            </button>
-          </form>
+          <AdminNav isAdmin={profile.role === "admin"} />
+
+          <div className="admin-sidebar-footer">
+            <Link className="sidebar-action" href="/">
+              <Icon name="external" size={16} />
+              Ver portal
+            </Link>
+            <form action={signOut}>
+              <button className="sidebar-action" type="submit">
+                <Icon name="logout" size={16} />
+                Sair
+              </button>
+            </form>
+          </div>
         </aside>
 
         <section className="admin-main">{children}</section>
