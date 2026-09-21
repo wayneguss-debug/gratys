@@ -31,7 +31,9 @@ function getSiteUrl() {
     : "http://localhost:3000";
 }
 
-export const revalidate = 60;\n\nconst navItems = [
+export const revalidate = 60;
+
+const navItems = [
   ["/", "Início"],
   ["/informativos", "Informativos"],
   ["/agenda", "Agenda"],
