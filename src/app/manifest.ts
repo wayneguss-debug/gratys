@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Avisos, prazos, eventos e orientações do cotidiano acadêmico em um só lugar.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f4efe5",
-    theme_color: "#191919",
+    background_color: "#f7f9fc",
+    theme_color: "#ffffff",
     lang: "pt-BR",
     icons: [
       {

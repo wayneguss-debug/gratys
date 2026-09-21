@@ -1,15 +1,11 @@
 import type { Metadata } from "next";
-import { Archivo_Black, DM_Mono, Inter } from "next/font/google";
+import { DM_Mono, Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
 import "./polish.css";
-import { getSiteSettings } from "@/lib/data";
-
-const display = Archivo_Black({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-display"
-});
+import { Icon } from "@/components/icon";
+import { ThemeControls } from "@/components/theme-controls";
+import { getPublishedPosts, getSiteSettings } from "@/lib/data";
 
 const mono = DM_Mono({
   weight: ["400", "500"],
@@ -35,11 +31,11 @@ function getSiteUrl() {
     : "http://localhost:3000";
 }
 
-const navItems = [
-  ["/informativos", "01 / Informativos"],
-  ["/agenda", "02 / Agenda"],
-  ["/campus", "03 / Campus"],
-  ["/#sobre", "04 / Projeto"]
+export const revalidate = 60;\n\nconst navItems = [
+  ["/", "Início"],
+  ["/informativos", "Informativos"],
+  ["/agenda", "Agenda"],
+  ["/campus", "Campus"]
 ] as const;
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -64,31 +60,50 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
-  const settings = await getSiteSettings();
+  const [settings, topPosts] = await Promise.all([
+    getSiteSettings(),
+    getPublishedPosts(1)
+  ]);
+
+  const pinned = topPosts[0]?.pinned ? topPosts[0] : null;
 
   return (
-    <html lang="pt-BR">
-      <body className={`${display.variable} ${mono.variable} ${body.variable}`}>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem("gratys:theme");document.documentElement.dataset.theme=["light","dark","contrast"].includes(t)?t:"light"}catch(e){document.documentElement.dataset.theme="light"}`
+          }}
+        />
+      </head>
+      <body className={`${mono.variable} ${body.variable}`}>
         <a className="skip-link" href="#conteudo">
           Pular para o conteúdo
         </a>
 
-        <div className="top-strip">
-          <div className="container strip-inner">
-            <span>Projeto Integrador • GRATYS TECH</span>
-            <span>IFMT Campus Cáceres</span>
-            <span className="strip-status">
-              <i aria-hidden="true" />
-              {settings.is_name_placeholder ? "Identidade em construção" : "Portal acadêmico"}
-            </span>
+        <div className="utility-bar">
+          <div className="container utility-inner">
+            <span>Projeto acadêmico independente • IFMT Campus Cáceres</span>
+            <span>GRATYS TECH • 2026</span>
           </div>
         </div>
+
+        {pinned ? (
+          <Link className="portal-alert" href={`/informativos/${pinned.slug}`}>
+            <span className="container alert-inner">
+              <Icon name="bell" size={17} />
+              <strong>Aviso em destaque:</strong>
+              <span>{pinned.title}</span>
+              <Icon name="arrow" size={16} />
+            </span>
+          </Link>
+        ) : null}
 
         <header className="site-header">
           <div className="container nav-wrap">
             <Link className="brand" href="/" aria-label={`${settings.site_name} — início`}>
-              <span className="brand-mark portal-mark" aria-hidden="true">
-                <span className="portal-mark-dot" />
+              <span className="brand-symbol" aria-hidden="true">
+                <span />
               </span>
               <span className="brand-copy">
                 <strong>{settings.site_name}</strong>
@@ -104,14 +119,32 @@ export default async function RootLayout({
               ))}
             </nav>
 
+            <div className="header-actions">
+              <form className="header-search" action="/buscar">
+                <Icon name="search" size={17} />
+                <input aria-label="Buscar no portal" name="q" placeholder="Buscar..." type="search" />
+              </form>
+
+              <Link className="header-icon-link" href="/meu-portal" aria-label="Meu portal">
+                <Icon name="bookmark" size={19} />
+                <span>Meu portal</span>
+              </Link>
+
+              <ThemeControls />
+            </div>
+
             <details className="mobile-menu">
-              <summary aria-label="Abrir navegação">Menu</summary>
+              <summary aria-label="Abrir navegação">
+                <span />
+                <span />
+                <span />
+              </summary>
               <nav aria-label="Navegação móvel">
                 {navItems.map(([href, label]) => (
-                  <Link href={href} key={href}>
-                    {label}
-                  </Link>
+                  <Link href={href} key={href}>{label}</Link>
                 ))}
+                <Link href="/buscar">Buscar</Link>
+                <Link href="/meu-portal">Meu portal</Link>
                 <Link href="/auth/login">Área da equipe</Link>
               </nav>
             </details>
@@ -122,20 +155,28 @@ export default async function RootLayout({
 
         <footer className="footer">
           <div className="container footer-grid">
-            <div>
-              <strong>{settings.site_name}</strong>
-              <p>{settings.is_name_placeholder ? "nome provisório" : settings.tagline}</p>
+            <div className="footer-brand">
+              <span className="brand-symbol small" aria-hidden="true"><span /></span>
+              <div>
+                <strong>{settings.site_name}</strong>
+                <p>{settings.tagline}</p>
+              </div>
             </div>
             <div>
-              <strong>GRATYS TECH</strong>
-              <p>Projeto Integrador • 2026</p>
+              <strong>Navegação</strong>
+              <Link href="/informativos">Informativos</Link>
+              <Link href="/agenda">Agenda</Link>
+              <Link href="/campus">Campus e transporte</Link>
+              <Link href="/meu-portal">Meu portal</Link>
             </div>
             <div>
-              <p>Contexto: IFMT Campus Cáceres</p>
-              <p>Projeto acadêmico independente. Não é um canal oficial do IFMT.</p>
+              <strong>Projeto</strong>
+              <p>Desenvolvido pela GRATYS TECH no contexto acadêmico do IFMT Campus Cáceres.</p>
+              <p>Para decisões oficiais, confirme sempre nos canais institucionais.</p>
             </div>
-            <div className="footer-team">
-              <Link href="/auth/login">Área da equipe →</Link>
+            <div>
+              <strong>Equipe</strong>
+              <Link href="/auth/login">Acessar painel editorial</Link>
             </div>
           </div>
         </footer>

@@ -12,7 +12,9 @@ function formatDate(value: string) {
 
 export default async function AdminPage() {
   const supabase = await createClient();
-  const now = new Date().toISOString();
+  const now = new Date();
+  const nowIso = now.toISOString();
+  const staleDraftCutoff = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000).toISOString();
 
   const [
     posts,
@@ -22,7 +24,9 @@ export default async function AdminPage() {
     locations,
     transport,
     recentPosts,
-    upcomingEvents
+    upcomingEvents,
+    publishedWithoutSource,
+    staleDrafts
   ] = await Promise.all([
     supabase.from("posts").select("*", { count: "exact", head: true }),
     supabase.from("posts").select("*", { count: "exact", head: true }).eq("status", "published"),
@@ -38,9 +42,19 @@ export default async function AdminPage() {
     supabase
       .from("events")
       .select("id,title,kind,starts_at,is_published")
-      .gte("starts_at", now)
+      .gte("starts_at", nowIso)
       .order("starts_at", { ascending: true })
-      .limit(4)
+      .limit(4),
+    supabase
+      .from("posts")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "published")
+      .is("source_url", null),
+    supabase
+      .from("posts")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "draft")
+      .lt("updated_at", staleDraftCutoff)
   ]);
 
   const stats: [string, number, string, IconName, string][] = [
@@ -48,6 +62,27 @@ export default async function AdminPage() {
     ["Rascunhos", drafts.count ?? 0, "/admin/posts?status=draft", "draft", "aguardando revisão"],
     ["Agenda", events.count ?? 0, "/admin/events", "calendar", "eventos e prazos"],
     ["Campus", (locations.count ?? 0) + (transport.count ?? 0), "/admin/campus", "map", "locais + horários"]
+  ];
+
+  const health = [
+    {
+      label: "Publicações sem fonte",
+      value: publishedWithoutSource.count ?? 0,
+      detail: "Revise quando a informação exigir referência externa.",
+      icon: "external" as IconName
+    },
+    {
+      label: "Rascunhos antigos",
+      value: staleDrafts.count ?? 0,
+      detail: "Rascunhos sem atualização há mais de 14 dias.",
+      icon: "clock" as IconName
+    },
+    {
+      label: "Próximas datas",
+      value: upcomingEvents.data?.length ?? 0,
+      detail: "Eventos e prazos futuros carregados no painel.",
+      icon: "calendar" as IconName
+    }
   ];
 
   return (
@@ -92,6 +127,28 @@ export default async function AdminPage() {
         ))}
       </div>
 
+      <section className="admin-card health-panel">
+        <div className="panel-heading">
+          <div>
+            <p className="eyebrow">QUALIDADE</p>
+            <h3>Saúde do conteúdo</h3>
+          </div>
+          <span className="health-note">checagem automática</span>
+        </div>
+        <div className="health-grid">
+          {health.map((item) => (
+            <div className="health-item" key={item.label}>
+              <span className="health-icon"><Icon name={item.icon} size={18} /></span>
+              <div>
+                <strong>{item.value}</strong>
+                <span>{item.label}</span>
+                <small>{item.detail}</small>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <div className="admin-dashboard-grid">
         <section className="admin-card dashboard-panel">
           <div className="panel-heading">
@@ -133,9 +190,7 @@ export default async function AdminPage() {
           <div className="compact-list">
             {(upcomingEvents.data ?? []).map((event) => (
               <div className="compact-row" key={event.id}>
-                <span className="date-chip">
-                  {formatDate(event.starts_at)}
-                </span>
+                <span className="date-chip">{formatDate(event.starts_at)}</span>
                 <span className="compact-main">
                   <strong>{event.title}</strong>
                   <small>{event.kind}</small>

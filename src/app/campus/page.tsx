@@ -1,3 +1,4 @@
+import { FavoriteButton } from "@/components/favorite-button";
 import { Icon } from "@/components/icon";
 import { getLocations, getTransportSchedules } from "@/lib/data";
 
@@ -9,99 +10,97 @@ export default async function CampusPage() {
     getTransportSchedules()
   ]);
 
-  const services = locations.filter((location) => location.category === "service").length;
-  const rooms = locations.filter((location) => location.category === "room").length;
-
   return (
     <main id="conteudo">
-      <section className="page-hero campus-hero">
+      <section className="page-hero clean-page-hero">
         <div className="container">
+          <div className="hero-icon"><Icon name="map" size={24} /></div>
           <p className="eyebrow">GUIA PRÁTICO</p>
           <h1>Campus</h1>
           <p>
-            Localização de setores, salas e serviços, além de horários de
-            transporte publicados pela equipe.
+            Encontre salas, setores e serviços com referências mais claras e consulte horários de transporte.
           </p>
-          <div className="archive-stats">
-            <span><strong>{locations.length}</strong> locais</span>
-            <span><strong>{services}</strong> serviços</span>
-            <span><strong>{rooms}</strong> salas</span>
-            <span><strong>{transport.length}</strong> horários</span>
-          </div>
         </div>
       </section>
 
       <section className="section">
-        <div className="container campus-layout">
-          <div className="campus-intro">
-            <p className="eyebrow">LOCAIS</p>
+        <div className="container campus-page-grid">
+          <aside className="campus-side">
+            <span className="section-kicker">Locais confirmados</span>
             <h2>Onde fica?</h2>
-            <p>
-              A lista só exibe informações marcadas como ativas e confirmadas.
-            </p>
-            <div className="campus-tip">
-              <Icon name="map" size={20} />
-              <span>Use bloco, piso e referência para localizar o destino mais rápido.</span>
-            </div>
-          </div>
+            <p>Use as referências abaixo para localizar o destino sem depender de instruções vagas.</p>
+            <div className="side-stat"><strong>{locations.length}</strong><span>locais cadastrados</span></div>
+          </aside>
 
-          <div className="location-list">
-            {locations.length ? (
-              locations.map((location, index) => (
-                <article className="location-item location-item-rich" key={location.id}>
-                  <span className="location-number">{String(index + 1).padStart(2, "0")}</span>
-                  <div>
-                    <strong>{location.name}</strong>
-                    <p>
-                      {[
-                        location.building,
-                        location.floor,
-                        location.reference,
-                        location.map_hint
-                      ]
-                        .filter(Boolean)
-                        .join(" • ") || location.description}
-                    </p>
-                    {location.description ? <small>{location.description}</small> : null}
+          <div className="location-cards">
+            {locations.length ? locations.map((location, index) => {
+              const href = `/campus#local-${location.id}`;
+              return (
+                <article className="location-card" id={`local-${location.id}`} key={location.id}>
+                  <div className="location-card-head">
+                    <span className="location-index">{String(index + 1).padStart(2, "0")}</span>
+                    <span className="soft-badge small">{location.category}</span>
+                    <FavoriteButton
+                      compact
+                      item={{
+                        id: location.id,
+                        kind: "location",
+                        title: location.name,
+                        subtitle: location.reference || location.category,
+                        href
+                      }}
+                    />
                   </div>
-                  <span className="location-tag">{location.category}</span>
+                  <h3>{location.name}</h3>
+                  <p className="location-primary">
+                    {[location.building, location.floor, location.reference].filter(Boolean).join(" • ") || "Referência ainda não informada"}
+                  </p>
+                  {location.map_hint ? <p><strong>Como chegar:</strong> {location.map_hint}</p> : null}
+                  {location.description ? <p>{location.description}</p> : null}
                 </article>
-              ))
-            ) : (
-              <div className="empty-state">
-                Nenhum local confirmado foi cadastrado ainda.
-              </div>
+              );
+            }) : (
+              <div className="friendly-empty compact"><p>Nenhum local confirmado foi cadastrado ainda.</p></div>
             )}
           </div>
         </div>
       </section>
 
-      <section className="section white" id="transporte">
+      <section className="section section-soft" id="transporte">
         <div className="container">
-          <div className="section-head">
-            <span className="section-number">T</span>
+          <div className="simple-section-heading">
             <div>
-              <p className="eyebrow">TRANSPORTE</p>
-              <h2>Horários publicados</h2>
+              <span className="section-kicker">Mobilidade</span>
+              <h2>Transporte</h2>
             </div>
+            <span className="section-count">{transport.length} horários</span>
           </div>
 
           {transport.length ? (
-            <div className="transport-list">
+            <div className="transport-grid">
               {transport.map((item) => (
-                <article className="transport-card transport-card-rich" key={item.id}>
-                  <span className="transport-icon"><Icon name="bus" size={20} /></span>
-                  <time>{item.departure_time.slice(0, 5)}</time>
-                  <strong>{item.line_name}</strong>
-                  <span>{item.direction}</span>
-                  {item.note ? <small>{item.note}</small> : null}
+                <article className="transport-item" key={item.id}>
+                  <div className="transport-time">{item.departure_time.slice(0, 5)}</div>
+                  <div>
+                    <strong>{item.line_name}</strong>
+                    <span>{item.direction}</span>
+                    {item.note ? <small>{item.note}</small> : null}
+                  </div>
+                  <FavoriteButton
+                    compact
+                    item={{
+                      id: item.id,
+                      kind: "transport",
+                      title: `${item.line_name} • ${item.departure_time.slice(0, 5)}`,
+                      subtitle: item.direction,
+                      href: "/campus#transporte"
+                    }}
+                  />
                 </article>
               ))}
             </div>
           ) : (
-            <div className="empty-state">
-              A equipe ainda não publicou horários confirmados.
-            </div>
+            <div className="friendly-empty compact"><p>Nenhum horário confirmado foi publicado ainda.</p></div>
           )}
         </div>
       </section>
